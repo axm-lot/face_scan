@@ -8,11 +8,44 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowLeft, Glasses, Scissors, Shirt } from "lucide-react"
 import { getFaceShapeRecommendations } from "@/lib/recommendations"
 
-interface Recommendation {
-  glasses: string[]
-  haircuts: string[]
-  collars: string[]
+interface StyleDescription {
+  name: string
   description: string
+}
+
+interface Recommendation {
+  glasses: StyleDescription[]
+  haircuts: StyleDescription[]
+  collars: StyleDescription[]
+  description: string
+}
+
+// Helper function to get the image path for glasses types
+function getGlassesImagePath(glassesType: string): string {
+  // Convert the glasses type to a URL-friendly format
+  const formattedType = glassesType.toLowerCase().replace(/\s+/g, "-")
+
+  return `/images/glasses/${formattedType}.jpg?text=${formattedType}-glasses&width=120&height=120`
+}
+
+// Helper function to get the image path for haircut types
+function getHaircutImagePath(haircutType: string): string {
+  // Convert the haircut type to a URL-friendly format
+  const formattedType = haircutType.toLowerCase().replace(/\s+/g, "-")
+
+  // In a production app, you would have actual images for each type
+  // For now, we'll use placeholder images
+  return `/images/haircuts/${formattedType}.png?text=${formattedType}-haircut&width=120&height=120`
+}
+
+// Helper function to get the image path for collar types
+function getCollarImagePath(collarType: string): string {
+  // Convert the collar type to a URL-friendly format
+  const formattedType = collarType.toLowerCase().replace(/\s+/g, "-")
+
+  // In a production app, you would have actual images for each type
+  // For now, we'll use placeholder images
+  return `/images/collars/${formattedType}.jpg?text=${formattedType}-collar&width=120&height=120`
 }
 
 export default function ResultsPage() {
@@ -102,15 +135,19 @@ export default function ResultsPage() {
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-medium mb-4">Recommended Glasses Styles</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   {recommendations.glasses.map((style, index) => (
-                    <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
-                      <div className="w-16 h-16 bg-gray-100 rounded-md flex items-center justify-center">
-                        <Glasses className="h-8 w-8 text-gray-400" />
+                    <div key={index} className="flex items-center gap-3 p-4 border rounded-lg">
+                      <div className="w-24 h-24 bg-gray-50 rounded-md flex items-center justify-center shrink-0 overflow-hidden">
+                        <img
+                          src={getGlassesImagePath(style.name) || "/placeholder.svg"}
+                          alt={`${style.name} glasses`}
+                          className="object-contain w-full h-full p-2"
+                        />
                       </div>
                       <div>
-                        <h4 className="font-medium">{style}</h4>
-                        <p className="text-sm text-gray-500">Perfect complement for your {faceShape} face shape</p>
+                        <h4 className="font-medium">{style.name}</h4>
+                        <p className="text-sm text-gray-500 mt-1">{style.description}</p>
                       </div>
                     </div>
                   ))}
@@ -123,15 +160,19 @@ export default function ResultsPage() {
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-medium mb-4">Recommended Haircut Styles</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   {recommendations.haircuts.map((style, index) => (
-                    <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
-                      <div className="w-16 h-16 bg-gray-100 rounded-md flex items-center justify-center">
-                        <Scissors className="h-8 w-8 text-gray-400" />
+                    <div key={index} className="flex items-center gap-3 p-4 border rounded-lg">
+                      <div className="w-24 h-24 bg-gray-50 rounded-xl flex items-center justify-center shrink-0 overflow-hidden">
+                        <img
+                          src={getHaircutImagePath(style.name) || "/placeholder.svg"}
+                          alt={`${style.name} haircut`}
+                          className="object-contain w-full h-full p-2 rounded-2xl"
+                        />
                       </div>
                       <div>
-                        <h4 className="font-medium">{style}</h4>
-                        <p className="text-sm text-gray-500">Enhances the features of your {faceShape} face shape</p>
+                        <h4 className="font-medium">{style.name}</h4>
+                        <p className="text-sm text-gray-500 mt-1">{style.description}</p>
                       </div>
                     </div>
                   ))}
@@ -144,15 +185,19 @@ export default function ResultsPage() {
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-medium mb-4">Recommended Collar Styles</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   {recommendations.collars.map((style, index) => (
-                    <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
-                      <div className="w-16 h-16 bg-gray-100 rounded-md flex items-center justify-center">
-                        <Shirt className="h-8 w-8 text-gray-400" />
+                    <div key={index} className="flex items-center gap-3 p-4 border rounded-lg">
+                      <div className="w-24 h-24 bg-gray-50 rounded-2xl flex items-center justify-center shrink-0 overflow-hidden">
+                        <img
+                          src={getCollarImagePath(style.name) || "/placeholder.svg"}
+                          alt={`${style.name} collar`}
+                          className="object-contain w-full h-full p-2 rounded-2xl"
+                        />
                       </div>
                       <div>
-                        <h4 className="font-medium">{style}</h4>
-                        <p className="text-sm text-gray-500">Flattering neckline for your {faceShape} face shape</p>
+                        <h4 className="font-medium">{style.name}</h4>
+                        <p className="text-sm text-gray-500 mt-1">{style.description}</p>
                       </div>
                     </div>
                   ))}
